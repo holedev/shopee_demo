@@ -1,0 +1,99 @@
+.header {
+  height: var(--header-height);
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerLeft {
+  flex: 1;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.headerLogo {
+  height: var(--header-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.headerLogoImg {
+  height: 150%;
+  object-fit: contain;
+}
+
+.search {
+  flex: 1;
+  --height: 32px;
+  height: var(--height);
+  max-width: 300px;
+  justify-self: center;
+}
+
+.searchInp {
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  width: 100%;
+  height: var(--height);
+  padding: 4px 12px;
+}
+
+.headerRight {
+  flex: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ccc;
+  padding: 4px 12px;
+  border-radius: 8px;
+  animation: userScale 0.5s ease-in-out;
+}
+
+@keyframes userScale {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.userAvt {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  margin-right: 6px;
+}
+
+.userAvtImg {
+}
+
+.userName {
+  font-weight: 500;
+}
+
+.btnLogout {
+  margin: 0 12px;
+  padding: 6px 20px;
+  background: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (width < 864px) {
+  .search {
+    display: none;
+  }
+}

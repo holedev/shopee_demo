@@ -1,0 +1,38 @@
+.wrapper {
+}
+
+.wrapper + .wrapper {
+  margin-top: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 12px;
+}
+
+.headerLeft {
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.headerRight {
+}
+
+.headerRightDelete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  transition: all linear 0.25s;
+}
+
+.headerRightDelete:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 4px 12px;
+}

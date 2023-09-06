@@ -1,0 +1,60 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnLogin {
+  display: flex;
+  align-items: center;
+  padding: 4px 20px;
+  border-radius: 8px;
+  gap: 8px;
+  position: relative;
+  min-width: 220px;
+}
+
+.loginLogo {
+  width: 36px;
+  height: 36px;
+  animation: logo 1.2s linear forwards;
+  z-index: 2;
+}
+
+@keyframes logo {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(130px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.loginText {
+  font-weight: 500;
+  transform-origin: left;
+}
+
+.loginText::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: 52px;
+  background: #f0f0f0;
+  border-radius: 0 8px 8px 0;
+  animation: text 0.6s linear forwards;
+  animation-delay: 0.6s;
+  transform-origin: left;
+}
+
+@keyframes text {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
