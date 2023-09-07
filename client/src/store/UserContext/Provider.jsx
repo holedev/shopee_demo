@@ -1,21 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { UserContext } from './Context';
 import { getAuth } from 'firebase/auth';
-import { useUserContext } from '../../hook';
-import { useNavigate } from 'react-router-dom';
+import reducer from './reducer';
+import cookie from 'react-cookies';
 
 function UserProvider({ children }) {
   const auth = getAuth();
 
-  const [user, setUser] = useState(null);
+  const [user, dispatch] = useReducer(reducer, cookie.load('user') || null);
 
   useEffect(() => {
     const unsubscribe = auth.onIdTokenChanged((user) => {
-      setUser(user);
-      localStorage.setItem('uid', JSON.stringify(user?.uid));
       if (!user?.uid) {
-        setUser(null);
-        localStorage.removeItem('uid');
+        console.log('Auth Success!');
       }
     });
 
@@ -25,7 +22,7 @@ function UserProvider({ children }) {
   }, [auth]);
 
   return (
-    <UserContext.Provider value={[user, setUser]}>
+    <UserContext.Provider value={[user, dispatch]}>
       {children}
     </UserContext.Provider>
   );

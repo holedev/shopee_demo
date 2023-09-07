@@ -1,20 +1,28 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logo } from '../../assets/img';
 import styles from './Header.module.css';
 import { useUserContext } from '../../hook';
+import clsx from 'clsx';
 
 function Header() {
   const navigate = useNavigate();
-  const [user] = useUserContext();
+  const [user, dispatch] = useUserContext();
+  const location = useLocation();
 
   const handleLogout = () => {
-    user?.auth.signOut();
+    user?.auth?.signOut();
+    dispatch({
+      type: 'logout',
+    });
     navigate('/auth');
-    localStorage.removeItem('uid');
   };
 
   return (
-    <header className={styles.header}>
+    <header
+      className={clsx(styles.header, {
+        [styles.hide]: location.pathname === '/auth',
+      })}
+    >
       <div className={styles.headerLeft}>
         <div className={styles.headerLogo}>
           <img className={styles.headerLogoImg} src={logo} alt='LOGO' />
@@ -33,11 +41,13 @@ function Header() {
             <div className={styles.userAvt}>
               <img
                 className={styles.userAvtImg}
-                src={user?.photoURL}
+                src={user?.avatar}
                 alt='avatar'
               />
             </div>
-            <div className={styles.userName}>{user?.displayName}</div>
+            <div
+              className={styles.userName}
+            >{`${user?.lastName} ${user?.firstName}`}</div>
           </div>
         )}
         <button onClick={handleLogout} className={styles.btnLogout}>

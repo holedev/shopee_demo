@@ -6,18 +6,20 @@ import { UserContext } from '../../store/UserContext';
 import { google } from '../../assets/img';
 import styles from './Login.module.css';
 import { Form, FormControl } from 'react-bootstrap';
-import { axiosAPI, endpoints } from '~/config/axiosAPI';
+import { authApis, axiosAPI, endpoints } from '~/config/axiosAPI';
+import cookie from 'react-cookies';
+import { useUserContext } from '~/hook';
 
 function Login() {
-  const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const nav = useNavigate();
+  const [user, dispatch] = useUserContext(UserContext);
   const [role, setRole] = useState('ROLE_USER');
 
   const handleLoginGoogle = async () => {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
     const res = await signInWithPopup(auth, provider);
-    console.log(res);
+
     const data = res._tokenResponse;
     const dataLogin = {
       firstName: data.firstName,
@@ -28,14 +30,30 @@ function Login() {
       userRole: role,
       avatar: data.photoUrl,
     };
+
+    await axiosAPI
+      .post(endpoints.login, dataLogin)
+      .then((res) => {
+        dispatch({
+          type: 'login',
+          payload: res.data,
+        });
+
+        res.data.user.userRole == 'ROLE_STORE'
+          ? nav('/store/' + res.data.user.id)
+          : nav('/');
+      })
+      .catch((err) => {
+        console.log(err.response.data || err);
+        alert(err.response.data || err);
+      });
   };
 
-  // useEffect(() => {
-  //   const uid = localStorage.getItem('uid') || null;
-  //   if (uid != null || uid != undefined) {
-  //     navigate('/');
-  //   }
-  // }, [user?.uid]);
+  useEffect(() => {
+    if (user?.id) {
+      return nav('/');
+    }
+  }, []);
 
   return (
     <div className={styles.wrapper}>

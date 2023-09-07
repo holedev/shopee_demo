@@ -1,15 +1,15 @@
 import { useContext } from 'react';
 import { UserContext } from '../store/UserContext';
-import { NoteContext } from '../store/NoteContext';
+import { AlertContext } from '~/store/AlertContext';
 
 function useUserContext() {
-  const [user, setUser] = useContext(UserContext);
-  return [user, setUser];
+  const [user, dispatch] = useContext(UserContext);
+  return [user, dispatch];
 }
 
-function useNoteContext() {
-  const [notes, setNotes] = useContext(NoteContext);
-  return [notes, setNotes];
+function useAlertContext() {
+  const [alert, setAlert] = useContext(AlertContext);
+  return [alert, setAlert];
 }
 
-export { useUserContext, useNoteContext };
+export { useUserContext, useAlertContext };

@@ -46,5 +46,6 @@ D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\User.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\ProductRepository.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\fomatters\CategoryFormatter.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\ApiUserController.java
+D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\dto\UserLoginOauth2Response.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\ApiProductController.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\ReceiptService.java

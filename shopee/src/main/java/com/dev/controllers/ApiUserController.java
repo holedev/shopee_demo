@@ -6,6 +6,7 @@ package com.dev.controllers;
 
 import com.dev.pojo.User;
 import com.dev.components.JwtService;
+import com.dev.dto.UserLoginOauth2Response;
 import com.dev.service.UserService;
 import java.security.Principal;
 import java.util.Map;
@@ -43,20 +44,15 @@ public class ApiUserController {
 
     @PostMapping("/login/")
     @CrossOrigin
-    public ResponseEntity<String> login(@RequestBody Map<String, String> userReq) {
-          String username = this.userService.loginUserWithOAuth2(userReq);
+    public ResponseEntity<Object> login(@RequestBody Map<String, String> userReq) {
+          User user = this.userService.loginUserWithOAuth2(userReq);
           
-          if (username != null) {
-              String token = this.jwtService.generateTokenLogin(username);    
-                return new ResponseEntity<>(token, HttpStatus.OK);
+          if (user != null) {
+            String token = this.jwtService.generateTokenLogin(user.getUsername());
+            UserLoginOauth2Response userRes = new UserLoginOauth2Response(user, token);
+            return new ResponseEntity<>(userRes, HttpStatus.OK);
           }
-//        if (this.userService.authUser(user.getUsername(), user.getPassword()) == true) {
-//            String token = this.jwtService.generateTokenLogin(user.getUsername());
-//            
-//            return new ResponseEntity<>(token, HttpStatus.OK);
-//        }
-
-        return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("ROLE CONFLICT!", HttpStatus.CONFLICT);
     }
     
     @GetMapping(path = "/current-user/", produces = MediaType.APPLICATION_JSON_VALUE)

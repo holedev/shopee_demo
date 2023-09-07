@@ -130,6 +130,7 @@ public class UserReppositoryImpl implements UserReppository {
         Session s = this.factory.getObject().getCurrentSession();
         try {
             if (u.getId() == null) {
+                System.out.print(u);
                 u.setPassword(this.passwordEncoder.encode("Admin@123"));
                 s.save(u);
             } else {
@@ -164,14 +165,17 @@ public class UserReppositoryImpl implements UserReppository {
     }
 
     @Override
-    public String loginUserWithOAuth2(Map<String, String> userReq) {
+    public User loginUserWithOAuth2(Map<String, String> userReq) {
         Session s = this.factory.getObject().getCurrentSession();
         User u = null;
         try {
             Query q = s.createQuery("FROM User WHERE username=:un");
             q.setParameter("un", userReq.get("username"));
             u = (User) q.getSingleResult();
-            return u.getUsername();
+            if (userReq.get("userRole").equals(u.getUserRole())) {
+                return u;
+            }
+            return null;
         } catch (NoResultException nre) {
 
         }
@@ -187,7 +191,7 @@ public class UserReppositoryImpl implements UserReppository {
             newU.setAvatar(userReq.get("avatar"));
             boolean userRes = this.addOrUpdateUser(newU);
             if (userRes) {
-                return userReq.get("username");
+                return getUserByUsername(userReq.get("username"));
             }
         }
         return null;

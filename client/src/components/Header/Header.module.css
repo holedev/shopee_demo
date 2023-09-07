@@ -4,6 +4,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 2;
+  background-color: #fff;
+}
+
+.header.hide {
+  display: none;
 }
 
 .headerLeft {
@@ -19,11 +25,12 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  margin-left: 12px;
 }
 
 .headerLogoImg {
-  height: 150%;
-  object-fit: contain;
+  height: 80%;
+  object-fit: cover;
 }
 
 .search {

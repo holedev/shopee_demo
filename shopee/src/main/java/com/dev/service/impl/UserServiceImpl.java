@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String loginUserWithOAuth2(Map<String, String> userReq) {
+    public User loginUserWithOAuth2(Map<String, String> userReq) {
         return this.userRepo.loginUserWithOAuth2(userReq);
     }
 

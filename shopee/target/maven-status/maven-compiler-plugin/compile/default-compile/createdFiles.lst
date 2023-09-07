@@ -3,6 +3,7 @@ com\dev\service\CategoryService.class
 com\dev\controllers\UserController.class
 com\dev\repository\impl\CommentRepositoryImpl.class
 com\dev\repository\UserReppository.class
+com\dev\dto\UserLoginOauth2Response.class
 com\dev\configs\HibernateConfig.class
 com\dev\service\impl\CommentServiceImpl.class
 com\dev\configs\TilesConfigs.class

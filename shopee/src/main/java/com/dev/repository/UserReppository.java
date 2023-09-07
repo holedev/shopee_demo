@@ -20,5 +20,5 @@ public interface UserReppository {
     boolean updateUserByAdmin(String username, String type);
     boolean authUser(String username, String password);
     User addUser(User user);
-    String loginUserWithOAuth2(Map<String, String> userReq);
+    User loginUserWithOAuth2(Map<String, String> userReq);
 }

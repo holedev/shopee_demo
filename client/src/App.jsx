@@ -3,14 +3,15 @@ import Error from './pages/Error';
 import { privateRouter, publicRouter } from './routes';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserProvider from './store/UserContext';
-import NoteProvider from './store/NoteContext';
+import Header from './components/Header';
 
 function App() {
   return (
     <Router>
       <div className='App'>
         <UserProvider>
-          <NoteProvider>
+          <Header />
+          <div className='body'>
             <Routes>
               {privateRouter.map((route, index) => {
                 const Page = route.component;
@@ -34,7 +35,7 @@ function App() {
               })}
               <Route path='*' element={<Error />} />
             </Routes>
-          </NoteProvider>
+          </div>
         </UserProvider>
       </div>
     </Router>
