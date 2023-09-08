@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,12 +24,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author dorara
  */
 @Entity
-@Table(name = "prod_tag")
+@Table(name = "comment_level")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ProdTag.findAll", query = "SELECT p FROM ProdTag p"),
-    @NamedQuery(name = "ProdTag.findById", query = "SELECT p FROM ProdTag p WHERE p.id = :id")})
-public class ProdTag implements Serializable {
+    @NamedQuery(name = "CommentLevel.findAll", query = "SELECT c FROM CommentLevel c"),
+    @NamedQuery(name = "CommentLevel.findById", query = "SELECT c FROM CommentLevel c WHERE c.id = :id"),
+    @NamedQuery(name = "CommentLevel.findByLevel", query = "SELECT c FROM CommentLevel c WHERE c.level = :level")})
+public class CommentLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,18 +38,24 @@ public class ProdTag implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "level")
+    private int level;
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Product productId;
-    @JoinColumn(name = "tag_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Tag tagId;
+    private Comment parentId;
 
-    public ProdTag() {
+    public CommentLevel() {
     }
 
-    public ProdTag(Integer id) {
+    public CommentLevel(Integer id) {
         this.id = id;
+    }
+
+    public CommentLevel(Integer id, int level) {
+        this.id = id;
+        this.level = level;
     }
 
     public Integer getId() {
@@ -58,20 +66,20 @@ public class ProdTag implements Serializable {
         this.id = id;
     }
 
-    public Product getProductId() {
-        return productId;
+    public int getLevel() {
+        return level;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setLevel(int level) {
+        this.level = level;
     }
 
-    public Tag getTagId() {
-        return tagId;
+    public Comment getParentId() {
+        return parentId;
     }
 
-    public void setTagId(Tag tagId) {
-        this.tagId = tagId;
+    public void setParentId(Comment parentId) {
+        this.parentId = parentId;
     }
 
     @Override
@@ -84,10 +92,10 @@ public class ProdTag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProdTag)) {
+        if (!(object instanceof CommentLevel)) {
             return false;
         }
-        ProdTag other = (ProdTag) object;
+        CommentLevel other = (CommentLevel) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -96,7 +104,7 @@ public class ProdTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dev.pojo.ProdTag[ id=" + id + " ]";
+        return "com.dev.pojo.CommentLevel[ id=" + id + " ]";
     }
     
 }

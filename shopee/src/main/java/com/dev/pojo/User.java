@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
- * @author admin
+ * @author dorara
  */
 @Entity
 @Table(name = "user")
@@ -41,8 +42,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
     @NamedQuery(name = "User.findByActive", query = "SELECT u FROM User u WHERE u.active = :active"),
-    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole")})
+    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole"),
+    @NamedQuery(name = "User.findByAvatar", query = "SELECT u FROM User u WHERE u.avatar = :avatar")})
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,10 +68,8 @@ public class User implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "email")
     private String email;
-//     @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 45)
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 45)
     @Column(name = "phone")
     private String phone;
     @Basic(optional = false)
@@ -76,11 +77,9 @@ public class User implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "username")
     private String username;
-    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 100)
-    @Column(name = "password")
+    @Size(max = 100)
     @JsonIgnore
+    @Column(name = "password")
     private String password;
     @Column(name = "active")
     private Boolean active;
@@ -88,17 +87,22 @@ public class User implements Serializable {
     @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "user_role")
-    
     private String userRole;
-    @OneToMany(mappedBy = "userId")
-    @JsonIgnore
-    private Set<SaleOrder> saleOrderSet;
-    
+    @Size(max = 100)
+    @Column(name = "avatar")
     private String avatar;
     
     @Transient
     @JsonIgnore
     private MultipartFile file;
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
 
     public User() {
     }
@@ -107,14 +111,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String firstName, String lastName, String email, String phone, String username, String password, String userRole) {
+    public User(Integer id, String firstName, String lastName, String email, String username, String userRole) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
         this.username = username;
-        this.password = password;
         this.userRole = userRole;
     }
 
@@ -190,13 +192,12 @@ public class User implements Serializable {
         this.userRole = userRole;
     }
 
-    @XmlTransient
-    public Set<SaleOrder> getSaleOrderSet() {
-        return saleOrderSet;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setSaleOrderSet(Set<SaleOrder> saleOrderSet) {
-        this.saleOrderSet = saleOrderSet;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override
@@ -222,31 +223,6 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "com.dev.pojo.User[ id=" + id + " ]";
-    }
-
-    /**
-     * @return the avatar
-     */
-    public String getAvatar() {
-        return avatar;
-    }
-
-    /**
-     * @param avatar the avatar to set
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-    
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    /**
-     * @param file the file to set
-     */
-    public void setFile(MultipartFile file) {
-        this.file = file;
     }
     
 }

@@ -6,6 +6,7 @@ package com.dev.repository.impl;
 
 import com.dev.pojo.Product;
 import com.dev.repository.ProductRepository;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,19 +99,21 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public boolean addOrUpdateProduct(Product p) {
+    public int addOrUpdateProduct(Product p, String mode) {
         Session s = this.factory.getObject().getCurrentSession();
         try {
-            if (p.getId() == null) {
-                s.save(p);
+            if (mode.equals("create")) {
+                Serializable productId = s.save(p);
+                p.setId((Integer) productId);
+                System.out.print("data " + productId);
             } else {
                 s.update(p);
             }
 
-            return true;
+            return p.getId();
         } catch (HibernateException ex) {
             ex.printStackTrace();
-            return false;
+            return -1;
         }
     }
 
@@ -131,5 +134,58 @@ public class ProductRepositoryImpl implements ProductRepository {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Product> getProductsByStore(int id, Map<String, String> params) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Product> q = b.createQuery(Product.class);
+        Root root = q.from(Product.class);
+        q.select(root);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(root.get("storeId"), id));
+         
+        if (params != null) {
+            
+            String kw = params.get("kw");
+            if (kw != null && !kw.isEmpty()) {
+                predicates.add(b.like(root.get("name"), String.format("%%%s%%", kw)));
+            }
+
+            String fromPrice = params.get("fromPrice");
+            if (fromPrice != null && !fromPrice.isEmpty()) {
+                predicates.add(b.greaterThanOrEqualTo(root.get("price"), Double.parseDouble(fromPrice)));
+            }
+
+            String toPrice = params.get("toPrice");
+            if (toPrice != null && !toPrice.isEmpty()) {
+                predicates.add(b.lessThanOrEqualTo(root.get("price"), Double.parseDouble(toPrice)));
+            }
+
+            String cateId = params.get("cateId");
+            if (cateId != null && !cateId.isEmpty()) {
+                predicates.add(b.equal(root.get("categoryId"), Integer.parseInt(cateId)));
+            }
+        }
+        
+        q.where(predicates.toArray(Predicate[]::new));
+
+        q.orderBy(b.asc(root.get("price")));
+
+        Query query = session.createQuery(q);
+
+        if (params != null) {
+            String page = params.get("page");
+            if (page != null && !page.isEmpty()) {
+                int p = Integer.parseInt(page);
+                int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
+                query.setMaxResults(pageSize);
+                query.setFirstResult((p - 1) * pageSize);
+            }
+        }
+
+        return query.getResultList();
     }
 }

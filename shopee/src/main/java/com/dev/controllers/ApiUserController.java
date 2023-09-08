@@ -9,6 +9,7 @@ import com.dev.components.JwtService;
 import com.dev.dto.UserLoginOauth2Response;
 import com.dev.service.UserService;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,12 @@ public class ApiUserController {
     public ResponseEntity<User> details(Principal user) {
         User u = this.userService.getUserByUn(user.getName());
         return new ResponseEntity<>(u, HttpStatus.OK);
+    }
+    
+    @GetMapping(path = "/users/get-stores/")
+    @CrossOrigin
+    public ResponseEntity<List<User>> getStores() {
+        return new ResponseEntity<>(this.userService.getStores(), HttpStatus.OK);
     }
     
     @PatchMapping("/users/{username}/{type}")

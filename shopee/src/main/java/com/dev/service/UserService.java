@@ -23,4 +23,5 @@ public interface UserService extends UserDetailsService  {
     boolean authUser(String username, String password);
     User addUser(Map<String, String> params, MultipartFile avatar);
     User loginUserWithOAuth2(Map<String, String> userReq);
+    List<User> getStores();
 }

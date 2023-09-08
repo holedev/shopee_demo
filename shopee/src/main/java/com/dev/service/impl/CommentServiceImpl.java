@@ -36,9 +36,9 @@ public class CommentServiceImpl implements CommentService {
     public Comment addComment(Comment c) {
         c.setCreatedDate(new Date());
         
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User u = this.userRepo.getUserByUsername(authentication.getName());
-        c.setUser(u);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User u = this.userRepo.getUserByUsername(authentication.getName());
+//        c.setUser(u);
         
         return this.commentRepo.addComment(c);
     }

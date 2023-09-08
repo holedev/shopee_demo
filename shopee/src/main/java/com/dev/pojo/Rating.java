@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,12 +24,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author dorara
  */
 @Entity
-@Table(name = "prod_tag")
+@Table(name = "rating")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ProdTag.findAll", query = "SELECT p FROM ProdTag p"),
-    @NamedQuery(name = "ProdTag.findById", query = "SELECT p FROM ProdTag p WHERE p.id = :id")})
-public class ProdTag implements Serializable {
+    @NamedQuery(name = "Rating.findAll", query = "SELECT r FROM Rating r"),
+    @NamedQuery(name = "Rating.findById", query = "SELECT r FROM Rating r WHERE r.id = :id"),
+    @NamedQuery(name = "Rating.findByNumber", query = "SELECT r FROM Rating r WHERE r.number = :number")})
+public class Rating implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,18 +38,27 @@ public class ProdTag implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "number")
+    private int number;
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Product productId;
-    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+    private User authorId;
+    @JoinColumn(name = "store_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Tag tagId;
+    private User storeId;
 
-    public ProdTag() {
+    public Rating() {
     }
 
-    public ProdTag(Integer id) {
+    public Rating(Integer id) {
         this.id = id;
+    }
+
+    public Rating(Integer id, int number) {
+        this.id = id;
+        this.number = number;
     }
 
     public Integer getId() {
@@ -58,20 +69,28 @@ public class ProdTag implements Serializable {
         this.id = id;
     }
 
-    public Product getProductId() {
-        return productId;
+    public int getNumber() {
+        return number;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
-    public Tag getTagId() {
-        return tagId;
+    public User getAuthorId() {
+        return authorId;
     }
 
-    public void setTagId(Tag tagId) {
-        this.tagId = tagId;
+    public void setAuthorId(User authorId) {
+        this.authorId = authorId;
+    }
+
+    public User getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(User storeId) {
+        this.storeId = storeId;
     }
 
     @Override
@@ -84,10 +103,10 @@ public class ProdTag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProdTag)) {
+        if (!(object instanceof Rating)) {
             return false;
         }
-        ProdTag other = (ProdTag) object;
+        Rating other = (Rating) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -96,7 +115,7 @@ public class ProdTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dev.pojo.ProdTag[ id=" + id + " ]";
+        return "com.dev.pojo.Rating[ id=" + id + " ]";
     }
     
 }

@@ -16,7 +16,7 @@ const StarRating = ({ rating, setRating, readonly }) => {
             })}
             type='button'
             key={index}
-            onClick={!readonly ? () => setRating(index) : () => {}}
+            onClick={!readonly ? () => setRating(index) : null}
             onMouseEnter={!readonly ? () => setHover(index) : null}
             onMouseLeave={!readonly ? () => setHover(rating) : null}
             onDoubleClick={

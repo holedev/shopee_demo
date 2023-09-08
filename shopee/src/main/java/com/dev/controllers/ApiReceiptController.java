@@ -4,8 +4,8 @@
  */
 package com.dev.controllers;
 
-import com.dev.pojo.Cart;
-import com.dev.service.ReceiptService;
+//import com.dev.pojo.Cart;
+//import com.dev.service.ReceiptService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class ApiReceiptController {
-    @Autowired
-    private ReceiptService receiptService;
-    
-    @PostMapping("/pay/")
-    @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin
-    public void add(@RequestBody Map<String, Cart> carts) {
-        this.receiptService.addReceipt(carts);
-    }
+//    @Autowired
+//    private ReceiptService receiptService;
+//    
+//    @PostMapping("/pay/")
+//    @ResponseStatus(HttpStatus.OK)
+//    @CrossOrigin
+//    public void add(@RequestBody Map<String, Cart> carts) {
+//        this.receiptService.addReceipt(carts);
+//    }
 }

@@ -6,7 +6,6 @@ package com.dev.pojo;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,11 +16,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author admin
+ * @author dorara
  */
 @Entity
 @Table(name = "order_detail")
@@ -41,13 +41,14 @@ public class OrderDetail implements Serializable {
     private Integer id;
     @Column(name = "unit_price")
     private Long unitPrice;
+    @Size(max = 45)
     @Column(name = "num")
-    private Integer num;
+    private String num;
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Product productId;
     @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private SaleOrder orderId;
 
     public OrderDetail() {
@@ -73,11 +74,11 @@ public class OrderDetail implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getNum() {
+    public String getNum() {
         return num;
     }
 
-    public void setNum(Integer num) {
+    public void setNum(String num) {
         this.num = num;
     }
 

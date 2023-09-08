@@ -124,4 +124,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepo.loginUserWithOAuth2(userReq);
     }
 
+    @Override
+    public List<User> getStores() {
+        return this.userRepo.getStores();
+    }
+
 }

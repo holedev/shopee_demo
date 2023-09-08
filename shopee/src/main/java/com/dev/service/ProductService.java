@@ -7,6 +7,7 @@ package com.dev.service;
 import com.dev.pojo.Product;
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -15,7 +16,8 @@ import java.util.Map;
 public interface ProductService {
     List<Product> getProducts(Map<String, String> params);
     Long countProduct();
-    boolean addOrUpdateProduct(Product p);
+    Product addOrUpdateProduct(Map<String, String> params, MultipartFile image);
     Product getProductById(int id);
     boolean deleteProduct(int id);
+    List<Product> getProductsByStore(int id, Map<String, String> params);
 }

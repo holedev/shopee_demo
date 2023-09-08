@@ -6,6 +6,9 @@ const SERVER_CONTEXT = '/shopee';
 export const endpoints = {
   login: `${SERVER_CONTEXT}/api/login/`,
   'current-user': `${SERVER_CONTEXT}/api/current-user/`,
+  categories: `${SERVER_CONTEXT}/api/categories/`,
+  products: `${SERVER_CONTEXT}/api/products/`,
+  user: `${SERVER_CONTEXT}/api/users/`,
 };
 
 export const authApis = axios.create({

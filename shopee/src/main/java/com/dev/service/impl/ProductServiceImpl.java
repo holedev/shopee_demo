@@ -7,15 +7,19 @@ package com.dev.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.dev.pojo.Product;
+import com.dev.repository.CategoryRepository;
 import com.dev.repository.ProductRepository;
+import com.dev.repository.UserReppository;
 import com.dev.service.ProductService;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -23,8 +27,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Autowired
     private ProductRepository productRepo;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserReppository userReppository;
     @Autowired
     private Cloudinary cloudinary;
 
@@ -39,19 +48,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean addOrUpdateProduct(Product p) {
-       // p.setImage("https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg");
-        
-        if (!p.getFile().isEmpty()) {
+    public Product addOrUpdateProduct(Map<String, String> params, MultipartFile image) {
+        Product p = new Product();
+        p.setName(params.get("name"));
+        p.setDescription(params.get("description"));
+        p.setPrice(Long.valueOf(params.get("price")));
+        try {
+            p.setCategoryId(categoryRepository.getCateById(Integer.parseInt(params.get("categoryId"))));
+        } catch (NumberFormatException ex) {
+        }
+        p.setStoreId(userReppository.getUserById(Integer.parseInt(params.get("storeId"))));
+        p.setCreatedDate(new Date());
+        if (!image.isEmpty()) {
             try {
-                Map res = this.cloudinary.uploader().upload(p.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                Map res = this.cloudinary.uploader().upload(image.getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
                 p.setImage(res.get("secure_url").toString());
             } catch (IOException ex) {
                 Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        return this.productRepo.addOrUpdateProduct(p);
+
+        int res = this.productRepo.addOrUpdateProduct(p, params.get("mode"));
+
+        if (res != -1) {
+            return productRepo.getProductById(res);
+        }
+        return null;
     }
 
     @Override
@@ -63,5 +86,10 @@ public class ProductServiceImpl implements ProductService {
     public boolean deleteProduct(int id) {
         return this.productRepo.deleteProduct(id);
     }
-    
+
+    @Override
+    public List<Product> getProductsByStore(int id, Map<String, String> params) {
+        return this.productRepo.getProductsByStore(id, params);
+    }
+
 }

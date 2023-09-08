@@ -15,7 +15,8 @@ import java.util.Map;
 public interface ProductRepository {
     List<Product> getProducts(Map<String, String> params);
     Long countProduct();
-    boolean addOrUpdateProduct(Product p);
+    int addOrUpdateProduct(Product p, String mode);
     Product getProductById(int id);
     boolean deleteProduct(int id);
+    List<Product> getProductsByStore(int id, Map<String, String> params);
 }

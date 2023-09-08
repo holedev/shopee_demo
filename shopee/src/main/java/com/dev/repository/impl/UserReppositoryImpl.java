@@ -42,6 +42,12 @@ public class UserReppositoryImpl implements UserReppository {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
+    public User getUserById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(User.class, id);
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         Session s = this.factory.getObject().getCurrentSession();
         try {
@@ -195,6 +201,16 @@ public class UserReppositoryImpl implements UserReppository {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<User> getStores() {
+        Session s = this.factory.getObject().getCurrentSession();
+        Query q = s.createQuery("SELECT id, firstName, lastName, username FROM User where user_role like :role and active = :isActive");
+        q.setParameter("role", "ROLE_STORE");
+        q.setParameter("isActive", true);
+        
+        return q.getResultList();
     }
 
 }

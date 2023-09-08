@@ -8,6 +8,7 @@ D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\CommentReposito
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\UserService.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\Tag.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\impl\CommentServiceImpl.java
+D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\CommentStore.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\impl\CategoryRepositoryImpl.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\impl\CategoryServiceImpl.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\impl\ProductRepositoryImpl.java
@@ -18,10 +19,7 @@ D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\configs\SpringSecurityConf
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\OrderDetail.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\CategoryService.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\filters\JwtAuthenticationTokenFilter.java
-D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\impl\ReceiptRepositoryImpl.java
-D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\Cart.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\configs\DispatcherServletInit.java
-D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\ReceiptRepository.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\ProductService.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\impl\CommentRepositoryImpl.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\UserReppository.java
@@ -33,9 +31,9 @@ D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\CommentService.jav
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\UserController.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\filters\CustomAccessDeniedHandler.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\configs\TilesConfigs.java
-D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\impl\ReceiptServiceImpl.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\filters\RestAuthenticationEntryPoint.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\Category.java
+D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\Rating.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\configs\SecurityWebApplicationInitializer.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\ProdTag.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\IndexController.java
@@ -45,7 +43,8 @@ D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\configs\HibernateConfig.ja
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\User.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\repository\ProductRepository.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\fomatters\CategoryFormatter.java
+D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\CommentProduct.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\ApiUserController.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\dto\UserLoginOauth2Response.java
 D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\controllers\ApiProductController.java
-D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\service\ReceiptService.java
+D:\Workspace\Java\shopee\shopee\src\main\java\com\dev\pojo\CommentLevel.java

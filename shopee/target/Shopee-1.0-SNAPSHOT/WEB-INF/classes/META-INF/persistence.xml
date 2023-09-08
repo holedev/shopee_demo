@@ -9,6 +9,11 @@
     <class>com.dev.pojo.OrderDetail</class>
     <class>com.dev.pojo.SaleOrder</class>
     <class>com.dev.pojo.Tag</class>
+    <class>com.dev.pojo.CommentLevel</class>
+    <class>com.dev.pojo.CommentProduct</class>
+    <class>com.dev.pojo.Rating</class>
+    <class>com.dev.pojo.Comment</class>
+    <class>com.dev.pojo.CommentStore</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saledb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

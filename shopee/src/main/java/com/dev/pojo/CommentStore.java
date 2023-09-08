@@ -23,12 +23,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author dorara
  */
 @Entity
-@Table(name = "prod_tag")
+@Table(name = "comment_store")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ProdTag.findAll", query = "SELECT p FROM ProdTag p"),
-    @NamedQuery(name = "ProdTag.findById", query = "SELECT p FROM ProdTag p WHERE p.id = :id")})
-public class ProdTag implements Serializable {
+    @NamedQuery(name = "CommentStore.findAll", query = "SELECT c FROM CommentStore c"),
+    @NamedQuery(name = "CommentStore.findById", query = "SELECT c FROM CommentStore c WHERE c.id = :id")})
+public class CommentStore implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -36,17 +36,17 @@ public class ProdTag implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Product productId;
-    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+    private Comment commentId;
+    @JoinColumn(name = "store_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Tag tagId;
+    private User storeId;
 
-    public ProdTag() {
+    public CommentStore() {
     }
 
-    public ProdTag(Integer id) {
+    public CommentStore(Integer id) {
         this.id = id;
     }
 
@@ -58,20 +58,20 @@ public class ProdTag implements Serializable {
         this.id = id;
     }
 
-    public Product getProductId() {
-        return productId;
+    public Comment getCommentId() {
+        return commentId;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setCommentId(Comment commentId) {
+        this.commentId = commentId;
     }
 
-    public Tag getTagId() {
-        return tagId;
+    public User getStoreId() {
+        return storeId;
     }
 
-    public void setTagId(Tag tagId) {
-        this.tagId = tagId;
+    public void setStoreId(User storeId) {
+        this.storeId = storeId;
     }
 
     @Override
@@ -84,10 +84,10 @@ public class ProdTag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProdTag)) {
+        if (!(object instanceof CommentStore)) {
             return false;
         }
-        ProdTag other = (ProdTag) object;
+        CommentStore other = (CommentStore) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -96,7 +96,7 @@ public class ProdTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dev.pojo.ProdTag[ id=" + id + " ]";
+        return "com.dev.pojo.CommentStore[ id=" + id + " ]";
     }
     
 }
