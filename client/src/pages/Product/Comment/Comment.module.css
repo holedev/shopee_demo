@@ -1,0 +1,39 @@
+.parentWrap {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.wrapper.levelChild {
+  margin-top: 12px;
+  margin-left: 40px;
+}
+
+.wrapper + .wrapper {
+  margin-top: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.bodyRight {
+  flex: 1;
+}
+
+.action {
+  font-size: 14px;
+}
+
+.span:hover {
+  cursor: pointer;
+  color: rgb(131, 131, 216);
+}
+
+.span + .span {
+  margin-left: 12px;
+}

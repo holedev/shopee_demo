@@ -4,7 +4,7 @@
  */
 package com.dev.controllers;
 
-import com.dev.dto.ProductResponseJSON;
+import com.dev.dto.ProductsWithPageCount;
 import com.dev.pojo.Comment;
 import com.dev.pojo.Product;
 import com.dev.service.CategoryService;
@@ -38,60 +38,60 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api")
 public class ApiProductController {
+
     @Autowired
     private ProductService prodService;
     @Autowired
     private CommentService commentService;
     @Autowired
     private Environment env;
-    
+
     @RequestMapping("/products/")
     @CrossOrigin
     public ResponseEntity<?> list(@RequestParam Map<String, String> params) {
         List<Product> data = this.prodService.getProducts(params);
         int pageSize = Integer.parseInt(this.env.getProperty("PAGE_SIZE"));
-        int pageNumber = (int) Math.ceil(data.size()*1.0/pageSize);
-        return new ResponseEntity<>(new ProductResponseJSON(data, pageNumber), HttpStatus.OK);
+        int pageNumber = (int) Math.ceil(this.prodService.countProduct() * 1.0 / pageSize);
+        return new ResponseEntity<>(new ProductsWithPageCount(data, pageNumber), HttpStatus.OK);
     }
-    
-    @PostMapping(path = "/products/", 
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, 
+
+    @PostMapping(path = "/products/",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @CrossOrigin
     public ResponseEntity<Product> addProduct(@RequestParam Map<String, String> params, @RequestPart MultipartFile image) {
         Product product = this.prodService.addOrUpdateProduct(params, image);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
-    
-    @DeleteMapping("/products/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(value = "id") int id) {
-        this.prodService.deleteProduct(id);
+
+    @GetMapping(path = "/products/get-similar-pro/{id}/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public ResponseEntity<List<Product>> similar(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(this.prodService.getSimilarProduct(id), HttpStatus.OK);
     }
-    
+
     @RequestMapping(path = "/products/{productId}/", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public ResponseEntity<Product> details(@PathVariable(value = "productId") int id) {
         return new ResponseEntity<>(this.prodService.getProductById(id), HttpStatus.OK);
     }
-    
-    @GetMapping("/products/{productId}/comments/")
-    @CrossOrigin
-    public ResponseEntity<List<Comment>> listComments(@PathVariable(value = "productId") int id) {
-        return new ResponseEntity<>(this.commentService.getComments(id), HttpStatus.OK);
-    }
-    
-    @PostMapping(path="/comments/", produces = MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin
-    public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
-        Comment c = this.commentService.addComment(comment);
-        
-        return new ResponseEntity<>(c, HttpStatus.CREATED);
-    }
-    
+
     @RequestMapping("/products/get-by-store/{storeId}/")
     @CrossOrigin
     public ResponseEntity<List<Product>> getAllByStore(@PathVariable(value = "storeId") int storeId, @RequestParam Map<String, String> params) {
         return new ResponseEntity<>(this.prodService.getProductsByStore(storeId, params), HttpStatus.OK);
     }
+
+    @DeleteMapping(path = "/products/{id}")
+    @CrossOrigin
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable(value = "id") int id) {
+        this.prodService.deleteProduct(id);
+    }
+
+//    @PostMapping("/products/get-similar-pro/")
+//    @CrossOrigin
+//    public ResponseEntity<?> getSimilarProduct() {
+//        return new ResponseEntity<>(this.prodService.getSimilarProduct(1, "demos"), HttpStatus.OK);
+//    }
 }

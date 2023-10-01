@@ -13,6 +13,7 @@ const StarRating = ({ rating, setRating, readonly }) => {
             className={clsx(styles.button, {
               [styles.on]: index <= ((rating && hover) || hover),
               [styles.off]: index > ((rating && hover) || hover),
+              [styles.disableHover]: readonly,
             })}
             type='button'
             key={index}

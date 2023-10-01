@@ -5,13 +5,17 @@
 package com.dev.repository;
 
 import com.dev.pojo.Comment;
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author huu-thanhduong
  */
 public interface CommentRepository {
-    List<Comment> getComments(int productId);
-    Comment addComment(Comment c);
+    Comment getCommentById(int id);
+    List<?> getComments(int id, String type);
+    boolean deleteComment(int id);
+    Comment addComment(Map<String, String> req);
 }

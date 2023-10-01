@@ -19,3 +19,7 @@ button {
 .star {
   font-size: 30px;
 }
+
+.disableHover:hover {
+  cursor: unset !important;
+}

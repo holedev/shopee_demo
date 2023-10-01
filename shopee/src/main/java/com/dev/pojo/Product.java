@@ -65,16 +65,11 @@ public class Product implements Serializable {
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
-    @JsonIgnore
-    private Set<ProdTag> prodTagSet;
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    @JsonIgnore
     private Category categoryId;
     @JoinColumn(name = "store_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    @JsonIgnore
     private User storeId;
 
     public Product() {
@@ -132,14 +127,14 @@ public class Product implements Serializable {
         this.createdDate = createdDate;
     }
 
-    @XmlTransient
-    public Set<ProdTag> getProdTagSet() {
-        return prodTagSet;
-    }
-
-    public void setProdTagSet(Set<ProdTag> prodTagSet) {
-        this.prodTagSet = prodTagSet;
-    }
+//    @XmlTransient
+//    public Set<ProdTag> getProdTagSet() {
+//        return prodTagSet;
+//    }
+//
+//    public void setProdTagSet(Set<ProdTag> prodTagSet) {
+//        this.prodTagSet = prodTagSet;
+//    }
 
     public Category getCategoryId() {
         return categoryId;

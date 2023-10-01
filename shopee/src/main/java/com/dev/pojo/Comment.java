@@ -4,6 +4,7 @@
  */
 package com.dev.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -56,13 +57,16 @@ public class Comment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId")
+    @JsonIgnore
     private Set<CommentStore> commentStoreSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId")
+    @JsonIgnore
     private Set<CommentProduct> commentProductSet;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User userId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentId")
+    @JsonIgnore
     private Set<CommentLevel> commentLevelSet;
 
     public Comment() {

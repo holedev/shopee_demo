@@ -13,6 +13,7 @@
   gap: 8px;
   position: relative;
   min-width: 220px;
+  background: #f0f0f0;
 }
 
 .loginLogo {

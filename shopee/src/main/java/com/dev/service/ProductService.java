@@ -20,4 +20,5 @@ public interface ProductService {
     Product getProductById(int id);
     boolean deleteProduct(int id);
     List<Product> getProductsByStore(int id, Map<String, String> params);
+    List<Product> getSimilarProduct(int id);
 }

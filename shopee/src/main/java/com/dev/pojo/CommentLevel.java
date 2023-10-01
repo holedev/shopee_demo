@@ -42,6 +42,9 @@ public class CommentLevel implements Serializable {
     @NotNull
     @Column(name = "level")
     private int level;
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Comment commentId;
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Comment parentId;
@@ -80,6 +83,14 @@ public class CommentLevel implements Serializable {
 
     public void setParentId(Comment parentId) {
         this.parentId = parentId;
+    }
+    
+    public Comment getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Comment commentId) {
+        this.commentId = commentId;
     }
 
     @Override

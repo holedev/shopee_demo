@@ -4,6 +4,7 @@
  */
 package com.dev.repository.impl;
 
+import com.dev.pojo.Rating;
 import com.dev.pojo.User;
 import com.dev.repository.UserReppository;
 import java.util.ArrayList;
@@ -17,12 +18,16 @@ import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -30,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class UserReppositoryImpl implements UserReppository {
+public class UserRepositoryImpl implements UserReppository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
@@ -126,7 +131,7 @@ public class UserReppositoryImpl implements UserReppository {
     @Override
     public Long countUsers() {
         Session s = this.factory.getObject().getCurrentSession();
-        javax.persistence.Query q = s.createQuery("SELECT Count(*) FROM User");
+        Query q = s.createQuery("SELECT Count(*) FROM User");
 
         return Long.parseLong(q.getSingleResult().toString());
     }
@@ -136,7 +141,7 @@ public class UserReppositoryImpl implements UserReppository {
         Session s = this.factory.getObject().getCurrentSession();
         try {
             if (u.getId() == null) {
-                System.out.print(u);
+                u.setActive(Boolean.TRUE);
                 u.setPassword(this.passwordEncoder.encode("Admin@123"));
                 s.save(u);
             } else {
@@ -192,7 +197,7 @@ public class UserReppositoryImpl implements UserReppository {
             newU.setFirstName(userReq.get("firstName"));
             newU.setLastName(userReq.get("lastName"));
             newU.setEmail(userReq.get("email"));
-            newU.setActive(Boolean.parseBoolean(userReq.get("active")));
+            newU.setActive(!!Boolean.parseBoolean(userReq.get("active")));
             newU.setUserRole(userReq.get("userRole"));
             newU.setAvatar(userReq.get("avatar"));
             boolean userRes = this.addOrUpdateUser(newU);
@@ -209,8 +214,95 @@ public class UserReppositoryImpl implements UserReppository {
         Query q = s.createQuery("SELECT id, firstName, lastName, username FROM User where user_role like :role and active = :isActive");
         q.setParameter("role", "ROLE_STORE");
         q.setParameter("isActive", true);
-        
+
         return q.getResultList();
+    }
+
+    @Override
+    public User getStoreById(int id) {
+        User u = getUserById(id);
+        if (u.getUserRole().equals("ROLE_STORE")) {
+            return u;
+        }
+        return null;
+    }
+
+    @Override
+    public double getRateOfStore(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            Query q = s.createQuery("SELECT AVG(number) FROM Rating where storeId = :user_id");
+            q.setParameter("user_id", id, StandardBasicTypes.INTEGER);
+            return Double.parseDouble(q.getSingleResult().toString());
+        } catch (Exception ex) {
+            return 0;
+        }
+    }
+
+    @Override
+    public int ratingStore(int id, int value) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Rating r = new Rating();
+
+        Query q = s.createQuery("FROM Rating WHERE authorId=:author_id and storeId=:store_id");
+        q.setParameter("author_id", this.getUserByUsername(auth.getName()));
+        q.setParameter("store_id", id, StandardBasicTypes.INTEGER);
+
+        try {
+            r = (Rating) q.getSingleResult();
+        } catch (NoResultException nre) {
+
+        }
+
+        try {
+            if (r.getId() == null) {
+                r.setNumber(value);
+                r.setStoreId(this.getStoreById(id));
+                r.setAuthorId(this.getUserByUsername(auth.getName()));
+                s.save(r);
+            } else {
+                r.setNumber(value);
+                s.update(r);
+            }
+
+            return value;
+        } catch (Exception ex) {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getRatingStore(int storeId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Session s = this.factory.getObject().getCurrentSession();
+
+        try {
+            Query q = s.createQuery("SELECT number FROM Rating where authorId.id = :author_id and storeId.id = :store_id");
+            q.setParameter("author_id", this.getUserByUsername(auth.getName()).getId());
+            q.setParameter("store_id", storeId, StandardBasicTypes.INTEGER);
+            return Integer.parseInt(q.getSingleResult().toString());
+        } catch (Exception ex) {
+            return -1;
+        }
+    }
+
+    @Override
+    public User updateUser(User u) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            s.update(u);
+            return u;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public User updateUserAvatar(MultipartFile image) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

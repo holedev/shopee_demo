@@ -75,7 +75,7 @@
                     <td>${u.firstName}</td>
                     <td>${u.lastName}</td>
                     <td>
-                        <c:url value="/api/users/${u.username}" var="apiAction" />
+                        <c:url value="/users/${u.username}" var="apiAction" />
                         <a href="<c:url value="/users/${u.username}" />" class="btn btn-success">Cập nhật</a>
                         <button class="btn btn-info" onclick="updateUserByAdmin('${apiAction}', 'reset')">Đặt lại mật khẩu</button>
                         <button class="btn btn-danger" onclick="updateUserByAdmin('${apiAction}', 'block')">${u.active == true ? "Khoá": "Mở"}</button>

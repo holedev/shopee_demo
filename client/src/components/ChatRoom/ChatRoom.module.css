@@ -1,0 +1,21 @@
+.wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 40px;
+  height: 400px;
+  width: 300px;
+  background-color: #ccc;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.hide {
+  height: 40px;
+}
+
+.none {
+  display: none;
+}
