@@ -8,7 +8,9 @@ import com.dev.pojo.Category;
 import com.dev.pojo.OrderDetail;
 import com.dev.pojo.Product;
 import com.dev.pojo.SaleOrder;
+import com.dev.pojo.User;
 import com.dev.repository.StatsRepository;
+import com.dev.repository.UserReppository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +42,8 @@ public class StatsRepositoryImpl implements StatsRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    @Autowired
+    private UserReppository userRepo;
     @Autowired
     private SimpleDateFormat f;
 
@@ -61,6 +67,7 @@ public class StatsRepositoryImpl implements StatsRepository {
     @Override
     public List<Object[]> statsRevenue(Map<String, String> params) {
         Session session = this.factory.getObject().getCurrentSession();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CriteriaBuilder b = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
         Root rP = q.from(Product.class);
@@ -72,35 +79,40 @@ public class StatsRepositoryImpl implements StatsRepository {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(b.equal(rD.get("productId"), rP.get("id")));
         predicates.add(b.equal(rD.get("orderId"), rO.get("id")));
+        predicates.add(b.equal(rP.get("storeId"), this.userRepo.getUserByUsername(auth.getName()).getId()));
 
-        String fd = params.get("fromDate");
-        if (fd != null && !fd.isEmpty()) {
-            try {
-                predicates.add(b.greaterThanOrEqualTo(rO.get("createdDate"), f.parse(fd)));
-            } catch (ParseException ex) {
-                Logger.getLogger(StatsRepositoryImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String cateId = params.get("cateId");
+        if (cateId != null && !cateId.isEmpty()) {
+            predicates.add(b.equal(rP.get("categoryId"), Integer.valueOf(cateId)));
         }
 
-        String td = params.get("toDate");
-        if (td != null && !td.isEmpty()) {
-            try {
-                predicates.add(b.lessThanOrEqualTo(rO.get("createdDate"), f.parse(td)));
-            } catch (ParseException ex) {
-                Logger.getLogger(StatsRepositoryImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String productId = params.get("productId");
+        if (productId != null && !productId.isEmpty()) {
+            predicates.add(b.equal(rP.get("id"), Integer.valueOf(productId)));
         }
 
-        String quarter = params.get("quarter");
-        if (quarter != null && !quarter.isEmpty()) {
-            String year = params.get("year");
-            if (year != null && !year.isEmpty()) {
+        String year = params.get("year");
+        if (year != null && !year.isEmpty()) {
+            predicates.add(b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)));
+            String quarter = params.get("quarter");
+            if (quarter != null && !quarter.isEmpty()) {
                 predicates.addAll(Arrays.asList(
                         b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)),
                         b.equal(b.function("QUARTER", Integer.class, rO.get("createdDate")), Integer.parseInt(quarter))
                 ));
             }
+
+            String month = params.get("month");
+            if (month != null && !month.isEmpty()) {
+                predicates.addAll(Arrays.asList(
+                        b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)),
+                        b.equal(b.function("MONTH", Integer.class, rO.get("createdDate")), Integer.parseInt(month))
+                ));
+
+            }
         }
+
+        
 
         q.where(predicates.toArray(Predicate[]::new));
 
@@ -108,7 +120,88 @@ public class StatsRepositoryImpl implements StatsRepository {
 
         Query query = session.createQuery(q);
         return query.getResultList();
+    }
 
+    @Override
+    public List<Product[]> getProductByCateId(Map<String, String> params) {
+        Session session = this.factory.getObject().getCurrentSession();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Product> q = b.createQuery(Product.class);
+        Root root = q.from(Product.class);
+        q.select(root);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(root.get("storeId"), this.userRepo.getUserByUsername(auth.getName()).getId()));
+
+        String cateId = params.get("cateId");
+        if (cateId != null && !cateId.isEmpty()) {
+            predicates.add(b.equal(root.get("categoryId"), Integer.valueOf(cateId)));
+        }
+
+        q.where(predicates.toArray(Predicate[]::new));
+
+        q.orderBy(b.asc(root.get("id")));
+
+        Query query = session.createQuery(q);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Object[]> statsStore(Map<String, String> params) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+        
+        Root rP = q.from(Product.class);
+        Root rD = q.from(OrderDetail.class);
+        Root rO = q.from(SaleOrder.class);
+        
+        q.multiselect(rP.get("storeId"), b.countDistinct(rP), b.sum(rD.get("num")));
+        
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(rD.get("productId"), rP.get("id")));
+        predicates.add(b.equal(rD.get("orderId"), rO.get("id")));
+        
+        String cateId = params.get("cateId");
+        if (cateId != null && !cateId.isEmpty()) {
+            predicates.add(b.equal(rP.get("categoryId"), Integer.valueOf(cateId)));
+        }
+
+        String storeId = params.get("storeId");
+        if (storeId != null && !storeId.isEmpty()) {
+            predicates.add(b.equal(rP.get("storeId"), Integer.valueOf(storeId)));
+        }
+
+        String year = params.get("year");
+        if (year != null && !year.isEmpty()) {
+            predicates.add(b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)));
+            String quarter = params.get("quarter");
+            if (quarter != null && !quarter.isEmpty()) {
+                predicates.addAll(Arrays.asList(
+                        b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)),
+                        b.equal(b.function("QUARTER", Integer.class, rO.get("createdDate")), Integer.parseInt(quarter))
+                ));
+            }
+
+            String month = params.get("month");
+            if (month != null && !month.isEmpty()) {
+                predicates.addAll(Arrays.asList(
+                        b.equal(b.function("YEAR", Integer.class, rO.get("createdDate")), Integer.parseInt(year)),
+                        b.equal(b.function("MONTH", Integer.class, rO.get("createdDate")), Integer.parseInt(month))
+                ));
+
+            }
+        }
+
+        
+
+        q.where(predicates.toArray(Predicate[]::new));
+        q.groupBy(rP.get("storeId"));
+
+        Query query = session.createQuery(q);
+        return query.getResultList();
     }
 
 }

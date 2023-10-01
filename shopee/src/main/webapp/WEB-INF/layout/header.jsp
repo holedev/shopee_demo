@@ -21,18 +21,21 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value="/users" />">Người dùng</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value="/stats" />">Thống kê</a>
+                </li>
 
                 <c:choose>
                     <c:when test="${pageContext.request.userPrincipal.name != null}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/" />">${pageContext.request.userPrincipal.name}</a>
+                        <li class="nav-item ms-auto">
+                            <a class="nav-link ms-auto" href="<c:url value="/" />">${pageContext.request.userPrincipal.name}</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ms-auto">
                             <a class="nav-link text-info" href="<c:url value="/logout" />">Đăng xuất</a>
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li class="nav-item">
+                        <li class="nav-item ms-auto">
                             <a class="nav-link" href="<c:url value="/login" />">Đăng nhập</a>
                         </li>
                     </c:otherwise>

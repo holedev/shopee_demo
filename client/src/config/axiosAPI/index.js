@@ -8,15 +8,21 @@ export const endpoints = {
   'current-user': `${SERVER_CONTEXT}/api/current-user/`,
   categories: `${SERVER_CONTEXT}/api/categories/`,
   products: `${SERVER_CONTEXT}/api/products/`,
-  user: `${SERVER_CONTEXT}/api/users/`,
+  users: `${SERVER_CONTEXT}/api/users/`,
+  comments: `${SERVER_CONTEXT}/api/comments/`,
+  pay: `${SERVER_CONTEXT}/api/pay/`,
+  stripe: `${SERVER_CONTEXT}/api/stripe/`,
+  stats: `${SERVER_CONTEXT}/api/stats/`,
 };
 
-export const authApis = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
-  headers: {
-    Authorization: cookie.load('token'),
-  },
-});
+export const authApis = () => {
+  return axios.create({
+    baseURL: import.meta.env.VITE_SERVER_URL,
+    headers: {
+      Authorization: cookie.load('token'),
+    },
+  });
+};
 
 export const axiosAPI = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,

@@ -7,15 +7,18 @@ import { google } from '../../assets/img';
 import styles from './Login.module.css';
 import { Form, FormControl } from 'react-bootstrap';
 import { authApis, axiosAPI, endpoints } from '~/config/axiosAPI';
-import cookie from 'react-cookies';
-import { useUserContext } from '~/hook';
+import cookie, { load } from 'react-cookies';
+import { useLoadingContext, useUserContext } from '~/hook';
 
 function Login() {
   const nav = useNavigate();
+  const [loading, setLoading] = useLoadingContext();
   const [user, dispatch] = useUserContext(UserContext);
   const [role, setRole] = useState('ROLE_USER');
 
   const handleLoginGoogle = async () => {
+    if (loading) return;
+
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
     const res = await signInWithPopup(auth, provider);
@@ -26,11 +29,12 @@ function Login() {
       lastName: data.lastName,
       email: data.email,
       username: data.email,
-      active: role === 'ROLE_USER' ? true : false,
+      active: role == 'ROLE_USER' ? true : false,
       userRole: role,
       avatar: data.photoUrl,
     };
 
+    setLoading(true);
     await axiosAPI
       .post(endpoints.login, dataLogin)
       .then((res) => {
@@ -38,6 +42,8 @@ function Login() {
           type: 'login',
           payload: res.data,
         });
+        cookie.save('user', res.data.user, { path: '/' });
+        cookie.save('token', res.data.token, { path: '/' });
 
         res.data.user.userRole == 'ROLE_STORE'
           ? nav('/store/' + res.data.user.id)
@@ -46,7 +52,8 @@ function Login() {
       .catch((err) => {
         console.log(err.response.data || err);
         alert(err.response.data || err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

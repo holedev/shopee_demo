@@ -26,6 +26,7 @@
   align-items: center;
   overflow: hidden;
   margin-left: 12px;
+  cursor: pointer;
 }
 
 .headerLogoImg {

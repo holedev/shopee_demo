@@ -4,6 +4,7 @@
  */
 package com.dev.repository;
 
+import com.dev.pojo.Product;
 import java.util.List;
 import java.util.Map;
 
@@ -13,5 +14,7 @@ import java.util.Map;
  */
 public interface StatsRepository {
     List<Object[]> countProductByCate();
+    List<Product[]> getProductByCateId(Map<String, String> params);
     List<Object[]> statsRevenue(Map<String, String> params);
+    List<Object[]> statsStore(Map<String, String> params);
 }

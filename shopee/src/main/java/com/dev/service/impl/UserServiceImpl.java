@@ -129,4 +129,42 @@ public class UserServiceImpl implements UserService {
         return this.userRepo.getStores();
     }
 
+    @Override
+    public User getStoreById(int id) {
+        return this.userRepo.getStoreById(id);
+    }
+
+    @Override
+    public double getRateOfStore(int id) {
+        return this.userRepo.getRateOfStore(id);
+    }
+
+    @Override
+    public int ratingStore(int id, int value) {
+        return this.userRepo.ratingStore(id, value);
+    }
+
+    @Override
+    public int getRatingStore(int storeId) {
+        return this.userRepo.getRatingStore(storeId);
+    }
+
+    @Override
+    public User updateUser(Map<String, String> user) {
+        User u = new User();
+        u.setId(Integer.parseInt(user.get("id")));
+        u.setFirstName(user.get("firstName"));
+        u.setPhone(user.get("phone"));
+        u.setLastName(user.get("lastName"));
+        u.setUsername(user.get("username"));
+        u.setUserRole(user.get("userRole"));
+        u.setEmail(user.get("email"));
+        return this.userRepo.updateUser(u);
+    }
+
+    @Override
+    public User updateUserAvatar(MultipartFile image) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

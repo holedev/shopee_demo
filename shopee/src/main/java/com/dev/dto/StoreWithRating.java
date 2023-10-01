@@ -4,8 +4,7 @@
  */
 package com.dev.dto;
 
-import com.dev.pojo.Product;
-import java.util.List;
+import com.dev.pojo.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,13 +14,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ProductResponseJSON {
-    private List<Product> products;
-    private int pageNumber;
-    
-    public ProductResponseJSON(List<Product> products, int pageNumber) {
-        this.products = products;
-        this.pageNumber = pageNumber;
+public class StoreWithRating {
+    private User user;
+    private double rating;
+
+    public StoreWithRating(User u, double rating) {
+        this.user = u;
+        this.rating = rating;
     }
     
 }

@@ -4,39 +4,49 @@ import { privateRouter, publicRouter } from './routes';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserProvider from './store/UserContext';
 import Header from './components/Header';
+import CartProvider from './store/CartContext';
+import ChatRoom from './components/ChatRoom';
+import LoadingProvider from './store/LoadingContext';
+import Loading from './components/Loading';
 
 function App() {
   return (
     <Router>
       <div className='App'>
-        <UserProvider>
-          <Header />
-          <div className='body'>
-            <Routes>
-              {privateRouter.map((route, index) => {
-                const Page = route.component;
-                return (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    element={
-                      <ProtectedRoute>
-                        <Page />
-                      </ProtectedRoute>
-                    }
-                  />
-                );
-              })}
-              {publicRouter.map((route, index) => {
-                const Page = route.component;
-                return (
-                  <Route key={index} path={route.path} element={<Page />} />
-                );
-              })}
-              <Route path='*' element={<Error />} />
-            </Routes>
-          </div>
-        </UserProvider>
+        <LoadingProvider>
+          <CartProvider>
+            <UserProvider>
+              <Header />
+              <Loading />
+              <ChatRoom />
+              <div className='body'>
+                <Routes>
+                  {privateRouter.map((route, index) => {
+                    const Page = route.component;
+                    return (
+                      <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                          <ProtectedRoute>
+                            <Page />
+                          </ProtectedRoute>
+                        }
+                      />
+                    );
+                  })}
+                  {publicRouter.map((route, index) => {
+                    const Page = route.component;
+                    return (
+                      <Route key={index} path={route.path} element={<Page />} />
+                    );
+                  })}
+                  <Route path='*' element={<Error />} />
+                </Routes>
+              </div>
+            </UserProvider>
+          </CartProvider>
+        </LoadingProvider>
       </div>
     </Router>
   );

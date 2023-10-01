@@ -9,11 +9,13 @@ import {
   Row,
 } from 'react-bootstrap';
 import { authApis, axiosAPI, endpoints } from '~/config/axiosAPI';
-import { useUserContext } from '~/hook';
+import { useLoadingContext, useUserContext } from '~/hook';
 
-function ProductModal({ onHide, show }) {
+function ProductModal({ product, onHide, show, getProductsByStore }) {
   const imageRef = useRef();
   const [user] = useUserContext();
+
+  const [loading, setLoading] = useLoadingContext();
 
   const [cates, setCates] = useState([]);
   const [data, setData] = useState({
@@ -22,7 +24,7 @@ function ProductModal({ onHide, show }) {
     name: '',
     description: '',
     price: 0,
-    mode: 'create',
+    mode: 'create ',
   });
 
   const getCates = async () => {
@@ -43,6 +45,7 @@ function ProductModal({ onHide, show }) {
 
   const handleCreateProduct = (e) => {
     e.preventDefault();
+    if (loading) return;
     (async () => {
       let form = new FormData();
 
@@ -50,18 +53,75 @@ function ProductModal({ onHide, show }) {
 
       form.append('image', imageRef.current.files[0]);
 
-      await authApis.post(endpoints['products'], form).then((res) => onHide());
+      setLoading(true);
+      await authApis()
+        .post(endpoints.products, form)
+        .then((res) => {
+          getProductsByStore();
+          onHide();
+          setData({
+            storeId: user.id,
+            categoryId: '',
+            name: '',
+            description: '',
+            price: 0,
+            mode: 'create',
+          });
+        })
+        .catch((err) =>
+          alert(
+            'Có lỗi xảy ra, vui lòng kiểm tra lại! Các trường ít nhất phải có 5 kí tự, hình ảnh không được để trống!'
+          )
+        )
+        .finally(() => setLoading(false));
     })();
+  };
+
+  const deleteProduct = async (id) => {
+    if (confirm('Bạn chắc chắn muốn xoá? Hành động này không thể hoàn tác!'))
+      await authApis()
+        .delete(endpoints.products + id)
+        .then((res) => {
+          getProductsByStore();
+          onHide();
+        })
+        .catch((err) => console.log(err));
+  };
+
+  const handleDelete = () => {
+    deleteProduct(product.id);
   };
 
   useEffect(() => {
     getCates();
   }, []);
 
+  useEffect(() => {
+    product
+      ? setData({
+          storeId: user.id,
+          categoryId: product?.categoryId.id,
+          name: product?.name,
+          description: product?.description,
+          price: parseInt(product?.price),
+          mode: 'update',
+          image: product?.image,
+          id: product?.id,
+        })
+      : setData({
+          storeId: user.id,
+          categoryId: '',
+          name: '',
+          description: '',
+          price: 0,
+          mode: 'create',
+        });
+  }, [product]);
+
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Thêm sản phẩm</Modal.Title>
+        <Modal.Title>{product ? 'Chỉnh sửa' : 'Thêm'} sản phẩm</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -147,8 +207,13 @@ function ProductModal({ onHide, show }) {
         <Button variant='secondary' onClick={onHide}>
           Đóng
         </Button>
+        {product && (
+          <Button variant='danger' onClick={handleDelete}>
+            Xoá
+          </Button>
+        )}
         <Button variant='primary' onClick={handleCreateProduct}>
-          Thêm sản phẩm
+          {product ? 'Chỉnh sửa' : 'Thêm'} sản phẩm
         </Button>
       </Modal.Footer>
     </Modal>

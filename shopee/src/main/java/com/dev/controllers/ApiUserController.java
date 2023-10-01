@@ -6,6 +6,7 @@ package com.dev.controllers;
 
 import com.dev.pojo.User;
 import com.dev.components.JwtService;
+import com.dev.dto.StoreWithRating;
 import com.dev.dto.UserLoginOauth2Response;
 import com.dev.service.UserService;
 import java.security.Principal;
@@ -56,6 +57,14 @@ public class ApiUserController {
         return new ResponseEntity<>("ROLE CONFLICT!", HttpStatus.CONFLICT);
     }
     
+    @PatchMapping(path = "/users/update-user/",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @CrossOrigin
+    public ResponseEntity<?> updateUser(@RequestBody Map<String, String> params) {
+        User u = this.userService.updateUser(params);
+        return new ResponseEntity<>(u, HttpStatus.OK);
+    }
+    
     @GetMapping(path = "/current-user/", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public ResponseEntity<User> details(Principal user) {
@@ -69,9 +78,26 @@ public class ApiUserController {
         return new ResponseEntity<>(this.userService.getStores(), HttpStatus.OK);
     }
     
-    @PatchMapping("/users/{username}/{type}")
-    @ResponseStatus(HttpStatus.OK)
-    public void updateUserByAdmin(@PathVariable(value = "username") String username, @PathVariable(value = "type") String type) {
-        this.userService.updateUserByAdmin(username, type);
+    @GetMapping(path = "/users/rating-store/{id}/")
+    @CrossOrigin
+    public ResponseEntity<?> ratingStore(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(this.userService.getRatingStore(id), HttpStatus.OK);
+    }
+    
+    @PostMapping(path = "/users/rating-store/{id}/")
+    @CrossOrigin
+    public ResponseEntity<?> ratingStore(@PathVariable(value = "id") int id, @RequestBody Map<String, String> req) {
+        return new ResponseEntity<>(this.userService.ratingStore(id, Integer.parseInt(req.get("value"))), HttpStatus.OK);
+    }
+    
+    @GetMapping(path = "/users/get-store-by-id/{id}/")
+    @CrossOrigin
+    public ResponseEntity<StoreWithRating> getStoreById(@PathVariable(value = "id") int id) {
+        User u = this.userService.getStoreById(id);
+        double rating = this.userService.getRateOfStore(id);
+        if (u == null) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(new StoreWithRating(u, rating), HttpStatus.OK);
     }
 }

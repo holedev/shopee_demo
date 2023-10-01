@@ -12,7 +12,7 @@
 
 <c:url value="/users" var="action" />
 <form:form method="post" action="${action}" modelAttribute="user" enctype="multipart/form-data">
-    <form:errors path="*" element="div" cssClass="alert alert-danger" />
+    
     <form:hidden path="id" />
     <form:hidden path="avatar" />
     <form:hidden path="password" />
@@ -35,11 +35,13 @@
         <form:input type="text" class="form-control" 
                     path="firstName" id="firstName" placeholder="Họ ..." />
         <label for="firstName">Họ</label>
+        <form:errors path="firstName" element="div" cssClass="text-danger" />
     </div>
     <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control" 
                     path="lastName" id="lastName" placeholder="Tên ..." />
         <label for="lastName">Tên</label>
+        <form:errors path="lastName" element="div" cssClass="text-danger" />
     </div>
         <div class="form-floating mb-3 mt-3">
         <form:input type="text" class="form-control" 
@@ -50,6 +52,7 @@
         <form:input type="text" class="form-control" 
                     path="email" id="email" placeholder="Email ..." />
         <label for="email">Email</label>
+        <form:errors path="email" element="div" cssClass="text-danger" />
     </div>
 
     <div class="form-floating mb-3 mt-3">

@@ -7,6 +7,7 @@ package com.dev.repository;
 import com.dev.pojo.User;
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -23,4 +24,10 @@ public interface UserReppository {
     User addUser(User user);
     User loginUserWithOAuth2(Map<String, String> userReq);
     List<User> getStores();
+    User getStoreById(int id);
+    double getRateOfStore(int id);
+    int ratingStore(int id, int value);
+    int getRatingStore(int storeId);
+    User updateUser(User u);
+    User updateUserAvatar( MultipartFile image);
 }

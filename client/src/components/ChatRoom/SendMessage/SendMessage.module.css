@@ -1,0 +1,19 @@
+.wrapper {
+  background-color: #ddd;
+  height: 40px;
+  display: flex;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+}
+
+.input {
+  margin-left: 2px;
+  flex: 1;
+  padding-left: 12px;
+}
+
+.btn {
+}

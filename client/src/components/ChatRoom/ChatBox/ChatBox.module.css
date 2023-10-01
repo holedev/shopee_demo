@@ -1,0 +1,27 @@
+.chatBoxWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  flex: 1;
+  padding: 12px 0;
+  gap: 4px;
+}
+
+.messageWrapper {
+  display: flex;
+  gap: 4px;
+}
+
+.messageWrapper.isMe {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.nameMessage {
+  width: fit-content;
+  margin-left: 0;
+}
+
+.nameMessage.isMe {
+  margin-left: auto;
+}

@@ -59,6 +59,10 @@ public class ProductServiceImpl implements ProductService {
         }
         p.setStoreId(userReppository.getUserById(Integer.parseInt(params.get("storeId"))));
         p.setCreatedDate(new Date());
+        if (params.get("mode").equals("update")) {
+            p.setId(Integer.parseInt(params.get("id")));
+            p.setImage(params.get("image"));
+        }
         if (!image.isEmpty()) {
             try {
                 Map res = this.cloudinary.uploader().upload(image.getBytes(),
@@ -90,6 +94,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProductsByStore(int id, Map<String, String> params) {
         return this.productRepo.getProductsByStore(id, params);
+    }
+
+    @Override
+    public List<Product> getSimilarProduct(int id) {
+        return this.productRepo.getSimilarProduct(id);
     }
 
 }
